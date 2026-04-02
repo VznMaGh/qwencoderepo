@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>项目积分管理系统 | Project Points</title>
+    <!-- Google Fonts: Inter for modern professional look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional page specific styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+        
+        .stat-trend {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .trend-up { color: var(--secondary-color); }
+        .trend-down { color: #EF4444; }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            background: #F9FAFB;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background: #F9FAFB;
+            border-color: #D1D5DB;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="url(#paint0_linear)"/>
+                <path d="M7 12L10.5 15.5L17 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="paint0_linear" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#4F46E5"/>
+                        <stop offset="1" stop-color="#7C3AED"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>ProManage</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="#" class="nav-item active">项目管理</a>
+            <a href="#" class="nav-item">积分记录</a>
+            <a href="#" class="nav-item">团队排行</a>
+        </div>
+        
+        <div class="user-profile">
+            <div style="text-align: right; margin-right: 8px;">
+                <div style="font-size: 13px; font-weight: 600; color: var(--text-main);">张三</div>
+                <div style="font-size: 11px; color: var(--secondary-color); font-weight: 600;">Lv.5 · 1,280 分</div>
+            </div>
+            <div class="avatar">ZS</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <h1>项目看板</h1>
+                <p>追踪项目进度，完成任务获取积分奖励</p>
+            </div>
+            <button class="btn-primary" onclick="openModal()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                新建项目
+            </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">进行中项目</div>
+                <div class="stat-value">12</div>
+                <div class="stat-trend trend-up">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    +2 本周
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">待完成任务</div>
+                <div class="stat-value">28</div>
+                <div class="stat-trend" style="color: var(--text-secondary);">
+                    正常推进
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">本周获得积分</div>
+                <div class="stat-value" style="color: var(--secondary-color);">+350</div>
+                <div class="stat-trend trend-up">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    +15% 上周
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">团队排名</div>
+                <div class="stat-value" style="color: #F59E0B;">#3</div>
+                <div class="stat-trend trend-up">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    上升 2 位
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Kanban Board -->
+            <div>
+                <div class="kanban-board">
+                    
+                    <!-- Column: To Do -->
+                    <div class="column">
+                        <div class="column-header">
+                            <div class="column-title">
+                                <span class="status-dot status-todo"></span>
+                                待处理
+                            </div>
+                            <span class="card-count">3</span>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="card-tags">
+                                <span class="tag tag-design">设计</span>
+                                <span class="tag tag-urgent">紧急</span>
+                            </div>
+                            <div class="card-title">官网首页 UI 重构设计</div>
+                            <div class="card-desc">完成新版官网首页的视觉设计，包括首屏、特性展示和底部区域</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    150 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #FECACA;">李四</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="card-tags">
+                                <span class="tag tag-dev">开发</span>
+                            </div>
+                            <div class="card-title">用户登录接口优化</div>
+                            <div class="card-desc">提升登录接口响应速度，增加缓存机制</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    80 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #BFDBFE;">王五</div>
+                                    <div class="member-avatar" style="background: #DDD6FE;">赵六</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="card-tags">
+                                <span class="tag tag-design">文档</span>
+                            </div>
+                            <div class="card-title">API 文档更新 v2.0</div>
+                            <div class="card-desc">补充新增接口的详细说明和使用示例</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    50 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #FEF3C7;">钱七</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Column: In Progress -->
+                    <div class="column">
+                        <div class="column-header">
+                            <div class="column-title">
+                                <span class="status-dot status-progress"></span>
+                                进行中
+                            </div>
+                            <span class="card-count">2</span>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="card-tags">
+                                <span class="tag tag-dev">后端</span>
+                                <span class="tag tag-urgent">核心</span>
+                            </div>
+                            <div class="card-title">支付网关集成</div>
+                            <div class="card-desc">对接支付宝和微信支付，完成沙箱环境测试</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    300 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #BBF7D0;">孙八</div>
+                                    <div class="member-avatar" style="background: #FECACA;">周九</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="card-tags">
+                                <span class="tag tag-dev">前端</span>
+                            </div>
+                            <div class="card-title">移动端适配优化</div>
+                            <div class="card-desc">修复 iOS Safari 上的布局问题，优化触摸体验</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    120 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #DDD6FE;">吴十</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Column: Done -->
+                    <div class="column">
+                        <div class="column-header">
+                            <div class="column-title">
+                                <span class="status-dot status-done"></span>
+                                已完成
+                            </div>
+                            <span class="card-count">4</span>
+                        </div>
+                        
+                        <div class="project-card" style="opacity: 0.8;">
+                            <div class="card-tags">
+                                <span class="tag tag-design">UI</span>
+                            </div>
+                            <div class="card-title">数据看板图表组件</div>
+                            <div class="card-desc">基于 ECharts 封装通用图表组件库</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    200 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #FECACA;">李四</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card" style="opacity: 0.8;">
+                            <div class="card-tags">
+                                <span class="tag tag-dev">性能</span>
+                            </div>
+                            <div class="card-title">首页加载速度优化</div>
+                            <div class="card-desc">通过懒加载和资源压缩将 FCP 降低至 1.2s</div>
+                            <div class="card-meta">
+                                <div class="card-points">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                    </svg>
+                                    180 分
+                                </div>
+                                <div class="card-members">
+                                    <div class="member-avatar" style="background: #BFDBFE;">王五</div>
+                                    <div class="member-avatar" style="background: #DDD6FE;">赵六</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Right Sidebar: Rank List -->
+            <div>
+                <div class="rank-widget">
+                    <div class="rank-header">
+                        <div class="rank-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9V2h12v7M6 18h12M6 14h12M6 22h12" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            积分排行榜
+                        </div>
+                        <a href="#" style="font-size: 12px; color: var(--primary-color); text-decoration: none; font-weight: 600;">查看全部</a>
+                    </div>
+                    
+                    <ul class="rank-list">
+                        <li class="rank-item">
+                            <div class="rank-info">
+                                <div class="rank-number top-1">1</div>
+                                <div class="rank-user">
+                                    <div class="member-avatar" style="width: 28px; height: 28px; margin-left: 0; background: #FECACA;">陈一</div>
+                                    <span>陈一</span>
+                                </div>
+                            </div>
+                            <div class="rank-score">2,450</div>
+                        </li>
+                        <li class="rank-item">
+                            <div class="rank-info">
+                                <div class="rank-number top-2">2</div>
+                                <div class="rank-user">
+                                    <div class="member-avatar" style="width: 28px; height: 28px; margin-left: 0; background: #BBF7D0;">林二</div>
+                                    <span>林二</span>
+                                </div>
+                            </div>
+                            <div class="rank-score">2,180</div>
+                        </li>
+                        <li class="rank-item">
+                            <div class="rank-info">
+                                <div class="rank-number top-3">3</div>
+                                <div class="rank-user">
+                                    <div class="member-avatar" style="width: 28px; height: 28px; margin-left: 0; background: #DDD6FE;">黄三</div>
+                                    <span>黄三</span>
+                                </div>
+                            </div>
+                            <div class="rank-score">1,920</div>
+                        </li>
+                        <li class="rank-item">
+                            <div class="rank-info">
+                                <div class="rank-number">4</div>
+                                <div class="rank-user">
+                                    <div class="member-avatar" style="width: 28px; height: 28px; margin-left: 0; background: #FECACA;">李四</div>
+                                    <span>李四</span>
+                                </div>
+                            </div>
+                            <div class="rank-score">1,650</div>
+                        </li>
+                        <li class="rank-item">
+                            <div class="rank-info">
+                                <div class="rank-number">5</div>
+                                <div class="rank-user">
+                                    <div class="member-avatar" style="width: 28px; height: 28px; margin-left: 0; background: #BFDBFE;">王五</div>
+                                    <span>王五</span>
+                                </div>
+                            </div>
+                            <div class="rank-score">1,480</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Tips Card -->
+                <div style="margin-top: 20px; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); border-radius: var(--radius-lg); padding: 20px; border: 1px solid rgba(79, 70, 229, 0.1);">
+                    <div style="display: flex; gap: 12px; align-items: start;">
+                        <div style="background: white; padding: 8px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 4px;">积分小贴士</h4>
+                            <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">完成高优先级任务可获得双倍积分！每周日 24 点结算周排名奖励。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Full Width Rank Section (Optional for more detail) -->
+        <div class="rank-widget" style="margin-top: 24px;">
+            <div class="rank-header">
+                <div class="rank-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    本月贡献榜
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                <!-- Mini Profile Cards -->
+                <div style="padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-md); display: flex; align-items: center; gap: 12px;">
+                    <div class="member-avatar" style="width: 40px; height: 40px; margin-left: 0; font-size: 14px; background: #FECACA;">陈一</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 14px;">陈一</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">+450 分 本周</div>
+                    </div>
+                </div>
+                <div style="padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-md); display: flex; align-items: center; gap: 12px;">
+                    <div class="member-avatar" style="width: 40px; height: 40px; margin-left: 0; font-size: 14px; background: #BBF7D0;">林二</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 14px;">林二</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">+380 分 本周</div>
+                    </div>
+                </div>
+                <div style="padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-md); display: flex; align-items: center; gap: 12px;">
+                    <div class="member-avatar" style="width: 40px; height: 40px; margin-left: 0; font-size: 14px; background: #DDD6FE;">黄三</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 14px;">黄三</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">+320 分 本周</div>
+                    </div>
+                </div>
+                <div style="padding: 16px; border: 1px dashed var(--border-light); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span style="font-size: 13px; font-weight: 500;">查看更多</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Create Project Modal -->
+    <div class="modal-overlay" id="createModal" onclick="closeModal(event)">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">创建新项目</div>
+                <button class="modal-close" onclick="closeModalBtn()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="event.preventDefault(); closeModalBtn();">
+                    <div class="form-group">
+                        <label class="form-label">项目名称</label>
+                        <input type="text" class="form-input" placeholder="例如：官网改版项目" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">任务类型</label>
+                            <select class="form-select">
+                                <option>设计任务</option>
+                                <option>开发任务</option>
+                                <option>文档编写</option>
+                                <option>测试任务</option>
+                                <option>其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">优先级</label>
+                            <select class="form-select">
+                                <option>普通</option>
+                                <option>重要</option>
+                                <option>紧急</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">积分奖励</label>
+                        <input type="number" class="form-input" placeholder="输入积分数值" value="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">任务描述</label>
+                        <textarea class="form-textarea" placeholder="详细描述任务要求和验收标准..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">指派成员</label>
+                        <select class="form-select" multiple style="height: 100px;">
+                            <option>李四</option>
+                            <option>王五</option>
+                            <option>赵六</option>
+                            <option>钱七</option>
+                        </select>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">按住 Ctrl/Cmd 可多选</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModalBtn()">取消</button>
+                <button class="btn-primary" onclick="closeModalBtn()">创建项目</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        function openModal() {
+            const modal = document.getElementById('createModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(event) {
+            if (event.target === event.currentTarget) {
+                closeModalBtn();
+            }
+        }
+        
+        function closeModalBtn() {
+            const modal = document.getElementById('createModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Simple Drag and Drop Simulation (Visual Only for Static Demo)
+        const cards = document.querySelectorAll('.project-card');
+        cards.forEach(card => {
+            card.addEventListener('dragstart', () => {
+                card.style.opacity = '0.5';
+            });
+            
+            card.addEventListener('dragend', () => {
+                card.style.opacity = '1';
+            });
+        });
+        
+        // Add draggable attribute dynamically
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.setAttribute('draggable', 'true');
+        });
+    </script>
+</body>
+</html>
