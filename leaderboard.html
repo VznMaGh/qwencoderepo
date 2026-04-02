@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分英雄榜 - TaskFlow Pro</title>
+    <link rel="stylesheet" href="fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="leaderboard.css">
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <i class="fa-solid fa-bolt"></i>
+                <span>TaskFlow Pro</span>
+            </div>
+            <div class="breadcrumb">
+                <a href="index.html">任务管理</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span class="active">积分英雄榜</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-info">
+                <div class="points-badge">
+                    <i class="fa-solid fa-coins"></i>
+                    <span id="user-points">2,450</span>
+                </div>
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="User">
+                    <span class="level-tag">LV.5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="leaderboard-page">
+        <!-- 顶部荣誉展示区 -->
+        <section class="honor-stage">
+            <div class="stage-title">
+                <i class="fa-solid fa-trophy"></i>
+                <h2>本月积分英雄榜</h2>
+                <p>致敬每一位努力奋斗的伙伴</p>
+            </div>
+            <div class="podium">
+                <div class="podium-item second">
+                    <div class="medal">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                    <img src="https://ui-avatars.com/api/?name=Yang+Y&background=c0c0c0&color=fff" alt="" class="avatar">
+                    <div class="name">杨无敌</div>
+                    <div class="dept">产品部</div>
+                    <div class="score">4,950</div>
+                    <div class="rank-label">第 2 名</div>
+                </div>
+                <div class="podium-item first">
+                    <div class="medal">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                    <img src="https://ui-avatars.com/api/?name=Chen+X&background=ffd700&color=fff" alt="" class="avatar">
+                    <div class="name">陈大侠</div>
+                    <div class="dept">研发部</div>
+                    <div class="score">5,280</div>
+                    <div class="rank-label">第 1 名</div>
+                </div>
+                <div class="podium-item third">
+                    <div class="medal">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                    <img src="https://ui-avatars.com/api/?name=Liu+S&background=cd7f32&color=fff" alt="" class="avatar">
+                    <div class="name">刘超人</div>
+                    <div class="dept">测试部</div>
+                    <div class="score">4,120</div>
+                    <div class="rank-label">第 3 名</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 筛选和统计区 -->
+        <section class="filter-section">
+            <div class="stats-summary">
+                <div class="summary-item">
+                    <div class="summary-icon blue"><i class="fa-solid fa-users"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-value">156</span>
+                        <span class="summary-label">参与人数</span>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon green"><i class="fa-solid fa-coins"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-value">48,620</span>
+                        <span class="summary-label">总发放积分</span>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon purple"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-value">312</span>
+                        <span class="summary-label">人均积分</span>
+                    </div>
+                </div>
+                <div class="summary-item highlight">
+                    <div class="summary-icon orange"><i class="fa-solid fa-fire"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-value">28</span>
+                        <span class="summary-label">完成任务数</span>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-controls">
+                <div class="time-filter">
+                    <button class="filter-btn active" data-period="month">本月</button>
+                    <button class="filter-btn" data-period="quarter">本季</button>
+                    <button class="filter-btn" data-period="year">本年</button>
+                    <button class="filter-btn" data-period="all">全部时间</button>
+                </div>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="搜索姓名或部门...">
+                </div>
+                <div class="sort-dropdown">
+                    <select class="form-control">
+                        <option value="score">按积分排序</option>
+                        <option value="tasks">按任务数排序</option>
+                        <option value="dept">按部门排序</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- 排行榜表格 -->
+        <section class="ranking-table-section">
+            <div class="table-container">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th width="8%">排名</th>
+                            <th width="25%">成员</th>
+                            <th width="15%">部门</th>
+                            <th width="12%">等级</th>
+                            <th width="15%">本月积分</th>
+                            <th width="15%">完成任务</th>
+                            <th width="10%">趋势</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="rank-row rank-1">
+                            <td>
+                                <div class="rank-badge gold">
+                                    <i class="fa-solid fa-trophy"></i> 1
+                                </div>
+                            </td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Chen+X&background=ffd700&color=fff" alt="">
+                                    <span class="member-name">陈大侠</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag dev">研发部</span></td>
+                            <td><span class="level-badge lv-6">LV.6</span></td>
+                            <td><span class="score-cell">5,280</span></td>
+                            <td><span class="task-count">42</span></td>
+                            <td><span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span></td>
+                        </tr>
+                        <tr class="rank-row rank-2">
+                            <td>
+                                <div class="rank-badge silver">
+                                    <i class="fa-solid fa-medal"></i> 2
+                                </div>
+                            </td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Yang+Y&background=c0c0c0&color=fff" alt="">
+                                    <span class="member-name">杨无敌</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag product">产品部</span></td>
+                            <td><span class="level-badge lv-5">LV.5</span></td>
+                            <td><span class="score-cell">4,950</span></td>
+                            <td><span class="task-count">38</span></td>
+                            <td><span class="trend down"><i class="fa-solid fa-arrow-trend-down"></i> -3%</span></td>
+                        </tr>
+                        <tr class="rank-row rank-3">
+                            <td>
+                                <div class="rank-badge bronze">
+                                    <i class="fa-solid fa-medal"></i> 3
+                                </div>
+                            </td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Liu+S&background=cd7f32&color=fff" alt="">
+                                    <span class="member-name">刘超人</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag test">测试部</span></td>
+                            <td><span class="level-badge lv-5">LV.5</span></td>
+                            <td><span class="score-cell">4,120</span></td>
+                            <td><span class="task-count">35</span></td>
+                            <td><span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +8%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">4</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Huang+R&background=random" alt="">
+                                    <span class="member-name">黄飞鸿</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag dev">研发部</span></td>
+                            <td><span class="level-badge lv-4">LV.4</span></td>
+                            <td><span class="score-cell">3,800</span></td>
+                            <td><span class="task-count">30</span></td>
+                            <td><span class="trend stable"><i class="fa-solid fa-minus"></i> 0%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">5</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Zhou+J&background=random" alt="">
+                                    <span class="member-name">周星星</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag design">设计部</span></td>
+                            <td><span class="level-badge lv-4">LV.4</span></td>
+                            <td><span class="score-cell">3,450</span></td>
+                            <td><span class="task-count">28</span></td>
+                            <td><span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +5%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">6</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Li+M&background=random" alt="">
+                                    <span class="member-name">李明</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag dev">研发部</span></td>
+                            <td><span class="level-badge lv-4">LV.4</span></td>
+                            <td><span class="score-cell">3,200</span></td>
+                            <td><span class="task-count">26</span></td>
+                            <td><span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +15%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">7</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Wang+F&background=random" alt="">
+                                    <span class="member-name">王芳</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag dev">研发部</span></td>
+                            <td><span class="level-badge lv-3">LV.3</span></td>
+                            <td><span class="score-cell">2,980</span></td>
+                            <td><span class="task-count">24</span></td>
+                            <td><span class="trend down"><i class="fa-solid fa-arrow-trend-down"></i> -2%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">8</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Zhang+W&background=random" alt="">
+                                    <span class="member-name">张武</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag dev">研发部</span></td>
+                            <td><span class="level-badge lv-3">LV.3</span></td>
+                            <td><span class="score-cell">2,750</span></td>
+                            <td><span class="task-count">22</span></td>
+                            <td><span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +6%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">9</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Zhao+L&background=random" alt="">
+                                    <span class="member-name">赵六</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag ops">运维部</span></td>
+                            <td><span class="level-badge lv-3">LV.3</span></td>
+                            <td><span class="score-cell">2,520</span></td>
+                            <td><span class="task-count">20</span></td>
+                            <td><span class="trend stable"><i class="fa-solid fa-minus"></i> 0%</span></td>
+                        </tr>
+                        <tr class="rank-row">
+                            <td><div class="rank-badge">10</div></td>
+                            <td>
+                                <div class="member-info">
+                                    <img src="https://ui-avatars.com/api/?name=Sun+Q&background=random" alt="">
+                                    <span class="member-name">孙琪</span>
+                                </div>
+                            </td>
+                            <td><span class="dept-tag product">产品部</span></td>
+                            <td><span class="level-badge lv-2">LV.2</span></td>
+                            <td><span class="score-cell">2,300</span></td>
+                            <td><span class="task-count">18</span></td>
+                            <td><span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +10%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination">
+                <span class="page-info">显示 1 到 10 条，共 156 条</span>
+                <div class="page-buttons">
+                    <button class="page-btn disabled"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn"><i class="fa-solid fa-ellipsis"></i></button>
+                    <button class="page-btn">16</button>
+                    <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 积分规则说明 -->
+        <section class="rules-section">
+            <div class="rules-header">
+                <h3><i class="fa-regular fa-book-open"></i> 积分获取规则</h3>
+            </div>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-icon blue"><i class="fa-regular fa-clipboard"></i></div>
+                    <h4>日常任务</h4>
+                    <ul>
+                        <li><span>完成普通任务</span><span class="points">+50~100</span></li>
+                        <li><span>完成紧急任务</span><span class="points">+200+</span></li>
+                        <li><span>提前完成任务</span><span class="points">+20  bonus</span></li>
+                    </ul>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon green"><i class="fa-solid fa-medal"></i></div>
+                    <h4>排名奖励</h4>
+                    <ul>
+                        <li><span>月度第 1 名</span><span class="points">+500</span></li>
+                        <li><span>月度第 2 名</span><span class="points">+300</span></li>
+                        <li><span>月度第 3 名</span><span class="points">+200</span></li>
+                    </ul>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon purple"><i class="fa-solid fa-star"></i></div>
+                    <h4>特殊成就</h4>
+                    <ul>
+                        <li><span>连续签到 7 天</span><span class="points">+100</span></li>
+                        <li><span>高质量完成任务</span><span class="points">+50</span></li>
+                        <li><span>帮助他人解决问题</span><span class="points">+30</span></li>
+                    </ul>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon orange"><i class="fa-solid fa-users"></i></div>
+                    <h4>团队协作</h4>
+                    <ul>
+                        <li><span>优秀团队奖</span><span class="points">+200/人</span></li>
+                        <li><span>跨部门协作</span><span class="points">+80</span></li>
+                        <li><span>知识分享</span><span class="points">+50</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 等级说明 -->
+        <section class="level-section">
+            <div class="level-header">
+                <h3><i class="fa-solid fa-layer-group"></i> 等级体系</h3>
+                <p>不断提升等级，解锁更多特权和荣誉</p>
+            </div>
+            <div class="level-progress-container">
+                <div class="level-item">
+                    <div class="level-badge lv-1">LV.1</div>
+                    <div class="level-info">
+                        <div class="level-name">新手</div>
+                        <div class="level-range">0-500 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 100%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-2">LV.2</div>
+                    <div class="level-info">
+                        <div class="level-name">入门</div>
+                        <div class="level-range">501-1000 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 100%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-3">LV.3</div>
+                    <div class="level-info">
+                        <div class="level-name">熟练</div>
+                        <div class="level-range">1001-2000 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 100%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-4">LV.4</div>
+                    <div class="level-info">
+                        <div class="level-name">精通</div>
+                        <div class="level-range">2001-3500 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 100%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-5">LV.5</div>
+                    <div class="level-info">
+                        <div class="level-name">专家</div>
+                        <div class="level-range">3501-5500 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 100%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-6">LV.6</div>
+                    <div class="level-info">
+                        <div class="level-name">大师</div>
+                        <div class="level-range">5501-8000 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 60%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-7">LV.7</div>
+                    <div class="level-info">
+                        <div class="level-name">宗师</div>
+                        <div class="level-range">8001-12000 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 0%"></div></div>
+                </div>
+                <div class="level-item">
+                    <div class="level-badge lv-8">LV.8</div>
+                    <div class="level-info">
+                        <div class="level-name">传奇</div>
+                        <div class="level-range">12001+ 分</div>
+                    </div>
+                    <div class="level-bar"><div class="level-fill" style="width: 0%"></div></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 时间筛选功能
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 搜索功能
+        const searchInput = document.querySelector('.search-box input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const keyword = e.target.value.toLowerCase();
+                document.querySelectorAll('.rank-row').forEach(row => {
+                    const memberName = row.querySelector('.member-name')?.textContent.toLowerCase() || '';
+                    const dept = row.querySelector('.dept-tag')?.textContent.toLowerCase() || '';
+                    if (memberName.includes(keyword) || dept.includes(keyword)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // 排序功能
+        const sortSelect = document.querySelector('.sort-dropdown select');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function() {
+                // 这里可以添加实际的排序逻辑
+                console.log('排序方式:', this.value);
+            });
+        }
+    </script>
+</body>
+</html>
