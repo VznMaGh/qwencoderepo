@@ -1,3 +1,1 @@
-# Font files are assets that should typically be versioned
-# No build artifacts, dependencies, or temp files detected in changes
-# Only font asset files were added along with HTML/CSS modifications
+Nothing should be ignored in this case, as the changes only include HTML files (leaderboard.html and index.html) which are source files and not build artifacts, dependencies, or temporary files.

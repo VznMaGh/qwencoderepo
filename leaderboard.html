@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分榜 - 任务与积分管理系统</title>
+    <link rel="stylesheet" href="fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 积分榜页面特有样式 */
+        .leaderboard-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .leaderboard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            color: var(--white);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leaderboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .leaderboard-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+
+        .leaderboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .leaderboard-title i {
+            font-size: 40px;
+            color: #fbbf24;
+        }
+
+        .leaderboard-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .leaderboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .lb-stat-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .lb-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .lb-stat-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .lb-stat-icon.gold { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: var(--white); }
+        .lb-stat-icon.silver { background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%); color: var(--white); }
+        .lb-stat-icon.bronze { background: linear-gradient(135deg, #fcd34d 0%, #d97706 100%); color: var(--white); }
+        .lb-stat-icon.participants { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--white); }
+
+        .lb-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            display: block;
+        }
+
+        .lb-stat-label {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-top: 4px;
+            display: block;
+        }
+
+        .leaderboard-main {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+
+        .ranking-table-section {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-filters {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .search-filter {
+            position: relative;
+        }
+
+        .search-filter input {
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            font-size: 14px;
+            width: 260px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-filter i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-filter input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table thead {
+            background: var(--gray-100);
+        }
+
+        .leaderboard-table th {
+            padding: 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leaderboard-table td {
+            padding: 18px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .leaderboard-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: #fafaff;
+        }
+
+        .rank-cell {
+            width: 80px;
+            text-align: center;
+        }
+
+        .rank-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 0 auto;
+        }
+
+        .rank-badge.rank-1 {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .rank-badge.rank-2 {
+            background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(156, 163, 175, 0.4);
+        }
+
+        .rank-badge.rank-3 {
+            background: linear-gradient(135deg, #fcd34d 0%, #d97706 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+        }
+
+        .rank-badge.rank-other {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-cell img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+        }
+
+        .rank-1 .user-cell img { border-color: #fbbf24; }
+        .rank-2 .user-cell img { border-color: #9ca3af; }
+        .rank-3 .user-cell img { border-color: #d97706; }
+
+        .user-info-cell {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--dark);
+        }
+
+        .user-dept {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .points-cell {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .trend-cell {
+            width: 80px;
+            text-align: center;
+        }
+
+        .trend-up {
+            color: var(--success);
+            font-size: 14px;
+        }
+
+        .trend-down {
+            color: var(--danger);
+            font-size: 14px;
+        }
+
+        .trend-stable {
+            color: var(--gray-400);
+            font-size: 14px;
+        }
+
+        .tasks-cell {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .level-badge.lv-1 { background: #dbeafe; color: #1e40af; }
+        .level-badge.lv-2 { background: #bfdbfe; color: #1e3a8a; }
+        .level-badge.lv-3 { background: #93c5fd; color: #1e3a8a; }
+        .level-badge.lv-4 { background: #60a5fa; color: var(--white); }
+        .level-badge.lv-5 { background: #3b82f6; color: var(--white); }
+        .level-badge.lv-6 { background: #2563eb; color: var(--white); }
+        .level-badge.lv-7 { background: #1d4ed8; color: var(--white); }
+        .level-badge.lv-8 { background: #1e40af; color: var(--white); }
+        .level-badge.lv-9 { background: #1e3a8a; color: var(--white); }
+        .level-badge.lv-10 { background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); color: var(--white); }
+
+        /* 侧边栏 */
+        .leaderboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .medal-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 24px;
+        }
+
+        .medal-card .card-header {
+            border-bottom: none;
+            padding: 0 0 16px 0;
+        }
+
+        .medal-card .card-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .medal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .medal-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--gray-100);
+            border-radius: var(--radius);
+        }
+
+        .medal-item.first {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .medal-item.second {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        }
+
+        .medal-item.third {
+            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+        }
+
+        .medal-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .medal-icon.gold { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: var(--white); }
+        .medal-icon.silver { background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%); color: var(--white); }
+        .medal-icon.bronze { background: linear-gradient(135deg, #fcd34d 0%, #d97706 100%); color: var(--white); }
+
+        .medal-user {
+            flex: 1;
+        }
+
+        .medal-user .name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--dark);
+            display: block;
+        }
+
+        .medal-user .score {
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .rules-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 16px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .leaderboard-main {
+                grid-template-columns: 1fr;
+            }
+
+            .leaderboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .leaderboard-header {
+                padding: 24px;
+            }
+
+            .leaderboard-title {
+                font-size: 24px;
+            }
+
+            .leaderboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .table-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                flex-wrap: wrap;
+            }
+
+            .search-filter input {
+                width: 100%;
+            }
+
+            .leaderboard-table {
+                font-size: 14px;
+            }
+
+            .rank-cell {
+                width: 60px;
+            }
+
+            .rank-badge {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <i class="fa-solid fa-bolt"></i>
+                <span>TaskFlow Pro</span>
+            </div>
+            <div class="breadcrumb">
+                <a href="index.html" style="color: var(--gray-500); text-decoration: none;">任务管理</a>
+                <span>/</span>
+                <span class="active">积分榜</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-info">
+                <div class="points-badge">
+                    <i class="fa-solid fa-coins"></i>
+                    <span id="user-points">2,450</span>
+                </div>
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="User">
+                    <span class="level-tag">LV.5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="leaderboard-content">
+        <a href="index.html" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            返回任务管理
+        </a>
+
+        <section class="leaderboard-header">
+            <h1 class="leaderboard-title">
+                <i class="fa-solid fa-trophy"></i>
+                积分英雄榜
+            </h1>
+            <p class="leaderboard-subtitle">见证卓越，激励前行！查看团队成员的积分排名，争夺月度冠军荣耀。</p>
+        </section>
+
+        <section class="leaderboard-stats">
+            <div class="lb-stat-card">
+                <div class="lb-stat-icon gold">
+                    <i class="fa-solid fa-medal"></i>
+                </div>
+                <span class="lb-stat-value" id="top-player">陈大侠</span>
+                <span class="lb-stat-label">本月冠军</span>
+            </div>
+            <div class="lb-stat-card">
+                <div class="lb-stat-icon silver">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <span class="lb-stat-value">5,280</span>
+                <span class="lb-stat-label">最高积分</span>
+            </div>
+            <div class="lb-stat-card">
+                <div class="lb-stat-icon bronze">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <span class="lb-stat-value">48</span>
+                <span class="lb-stat-label">参与人数</span>
+            </div>
+            <div class="lb-stat-card">
+                <div class="lb-stat-icon participants">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <span class="lb-stat-value">12,840</span>
+                <span class="lb-stat-label">总积分产出</span>
+            </div>
+        </section>
+
+        <div class="leaderboard-main">
+            <section class="ranking-table-section">
+                <div class="table-filters">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fa-solid fa-list"></i> 全部
+                        </button>
+                        <button class="filter-btn" data-filter="month">
+                            <i class="fa-regular fa-calendar"></i> 本月
+                        </button>
+                        <button class="filter-btn" data-filter="week">
+                            <i class="fa-regular fa-clock"></i> 本周
+                        </button>
+                        <button class="filter-btn" data-filter="dept">
+                            <i class="fa-solid fa-building"></i> 部门
+                        </button>
+                    </div>
+                    <div class="search-filter">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="搜索成员姓名或部门...">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th class="rank-cell">排名</th>
+                                <th width="35%">成员</th>
+                                <th width="15%">部门</th>
+                                <th width="15%">等级</th>
+                                <th width="15%">总积分</th>
+                                <th width="10%">趋势</th>
+                                <th width="15%">完成任务</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="rank-1">
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-1">1</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Chen+X&background=ffd700&color=fff" alt="陈大侠">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">陈大侠</span>
+                                            <span class="user-dept">chen.daxia@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>研发部</td>
+                                <td><span class="level-badge lv-8">LV.8</span></td>
+                                <td class="points-cell">5,280</td>
+                                <td class="trend-cell"><span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span></td>
+                                <td class="tasks-cell">42 个</td>
+                            </tr>
+                            <tr class="rank-2">
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-2">2</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Yang+Y&background=c0c0c0&color=fff" alt="杨无敌">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">杨无敌</span>
+                                            <span class="user-dept">yang.wudi@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>产品部</td>
+                                <td><span class="level-badge lv-7">LV.7</span></td>
+                                <td class="points-cell">4,950</td>
+                                <td class="trend-cell"><span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8%</span></td>
+                                <td class="tasks-cell">38 个</td>
+                            </tr>
+                            <tr class="rank-3">
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-3">3</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Liu+S&background=cd7f32&color=fff" alt="刘超人">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">刘超人</span>
+                                            <span class="user-dept">liu.chaoren@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>测试部</td>
+                                <td><span class="level-badge lv-6">LV.6</span></td>
+                                <td class="points-cell">4,120</td>
+                                <td class="trend-cell"><span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> -3%</span></td>
+                                <td class="tasks-cell">35 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">4</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Huang+R&background=random" alt="黄飞鸿">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">黄飞鸿</span>
+                                            <span class="user-dept">huang.feihong@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>研发部</td>
+                                <td><span class="level-badge lv-6">LV.6</span></td>
+                                <td class="points-cell">3,800</td>
+                                <td class="trend-cell"><span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +5%</span></td>
+                                <td class="tasks-cell">31 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">5</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Zhou+J&background=random" alt="周星星">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">周星星</span>
+                                            <span class="user-dept">zhou.xingxing@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>设计部</td>
+                                <td><span class="level-badge lv-5">LV.5</span></td>
+                                <td class="points-cell">3,450</td>
+                                <td class="trend-cell"><span class="trend-stable"><i class="fa-solid fa-minus"></i> 0%</span></td>
+                                <td class="tasks-cell">28 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">6</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Wu+S&background=random" alt="吴双">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">吴双</span>
+                                            <span class="user-dept">wu.shuang@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>运营部</td>
+                                <td><span class="level-badge lv-5">LV.5</span></td>
+                                <td class="points-cell">3,280</td>
+                                <td class="trend-cell"><span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +7%</span></td>
+                                <td class="tasks-cell">26 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">7</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Zheng+Q&background=random" alt="郑强">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">郑强</span>
+                                            <span class="user-dept">zheng.qiang@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>研发部</td>
+                                <td><span class="level-badge lv-4">LV.4</span></td>
+                                <td class="points-cell">2,960</td>
+                                <td class="trend-cell"><span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> -2%</span></td>
+                                <td class="tasks-cell">24 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">8</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Sun+L&background=random" alt="孙丽">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">孙丽</span>
+                                            <span class="user-dept">sun.li@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>市场部</td>
+                                <td><span class="level-badge lv-4">LV.4</span></td>
+                                <td class="points-cell">2,750</td>
+                                <td class="trend-cell"><span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +4%</span></td>
+                                <td class="tasks-cell">22 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">9</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Qian+F&background=random" alt="钱芳">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">钱芳</span>
+                                            <span class="user-dept">qian.fang@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>人力资源部</td>
+                                <td><span class="level-badge lv-4">LV.4</span></td>
+                                <td class="points-cell">2,580</td>
+                                <td class="trend-cell"><span class="trend-stable"><i class="fa-solid fa-minus"></i> 0%</span></td>
+                                <td class="tasks-cell">20 个</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">
+                                    <div class="rank-badge rank-other">10</div>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=User&background=random" alt="当前用户">
+                                        <div class="user-info-cell">
+                                            <span class="user-name">我 (管理员)</span>
+                                            <span class="user-dept">admin@company.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>管理层</td>
+                                <td><span class="level-badge lv-5">LV.5</span></td>
+                                <td class="points-cell">2,450</td>
+                                <td class="trend-cell"><span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +6%</span></td>
+                                <td class="tasks-cell">18 个</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <span class="page-info">显示 1 到 10 条，共 48 条</span>
+                    <div class="page-buttons">
+                        <button class="page-btn disabled"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">4</button>
+                        <button class="page-btn">5</button>
+                        <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="leaderboard-sidebar">
+                <div class="medal-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-medal"></i> 领奖台</h3>
+                    </div>
+                    <div class="medal-list">
+                        <div class="medal-item first">
+                            <div class="medal-icon gold">
+                                <i class="fa-solid fa-crown"></i>
+                            </div>
+                            <div class="medal-user">
+                                <span class="name">🥇 陈大侠</span>
+                                <span class="score">5,280 分 - 研发部</span>
+                            </div>
+                        </div>
+                        <div class="medal-item second">
+                            <div class="medal-icon silver">
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div class="medal-user">
+                                <span class="name">🥈 杨无敌</span>
+                                <span class="score">4,950 分 - 产品部</span>
+                            </div>
+                        </div>
+                        <div class="medal-item third">
+                            <div class="medal-icon bronze">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                            <div class="medal-user">
+                                <span class="name">🥉 刘超人</span>
+                                <span class="score">4,120 分 - 测试部</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rules-card">
+                    <div class="card-header">
+                        <h3><i class="fa-regular fa-lightbulb"></i> 积分小贴士</h3>
+                    </div>
+                    <ul class="rules-list">
+                        <li>
+                            <span class="rule-icon"><i class="fa-regular fa-clipboard"></i></span>
+                            <div class="rule-desc"><span>完成普通任务</span><span class="rule-points">+50~100</span></div>
+                        </li>
+                        <li>
+                            <span class="rule-icon"><i class="fa-solid fa-fire"></i></span>
+                            <div class="rule-desc"><span>完成紧急任务</span><span class="rule-points">+200+</span></div>
+                        </li>
+                        <li>
+                            <span class="rule-icon"><i class="fa-solid fa-medal"></i></span>
+                            <div class="rule-desc"><span>月度排名前三</span><span class="rule-points">+500</span></div>
+                        </li>
+                        <li>
+                            <span class="rule-icon"><i class="fa-solid fa-users"></i></span>
+                            <div class="rule-desc"><span>团队协作奖励</span><span class="rule-points">+100</span></div>
+                        </li>
+                        <li>
+                            <span class="rule-icon"><i class="fa-solid fa-bolt"></i></span>
+                            <div class="rule-desc"><span>提前完成任务</span><span class="rule-points">+50</span></div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="rules-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-calendar-trophy"></i> 本月活动</h3>
+                    </div>
+                    <div style="padding: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                                <i class="fa-solid fa-gift"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--dark);">双倍积分周</div>
+                                <div style="font-size: 13px; color: var(--gray-500);">11 月 15 日 - 11 月 21 日</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                                <i class="fa-solid fa-flag-checkered"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: var(--dark);">冲刺挑战赛</div>
+                                <div style="font-size: 13px; color: var(--gray-500);">月底最后三天</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        // 筛选按钮交互
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 搜索功能
+        const searchInput = document.querySelector('.search-filter input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.leaderboard-table tbody tr').forEach(row => {
+                const userName = row.querySelector('.user-name')?.textContent.toLowerCase() || '';
+                const userDept = row.querySelector('.user-dept')?.textContent.toLowerCase() || '';
+                const dept = row.cells[2]?.textContent.toLowerCase() || '';
+                
+                if (userName.includes(searchTerm) || userDept.includes(searchTerm) || dept.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
