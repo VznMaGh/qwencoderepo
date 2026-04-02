@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务执行详情 - TaskFlow Pro</title>
+    <link rel="stylesheet" href="fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="task-detail.css">
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <i class="fa-solid fa-bolt"></i>
+                <span>TaskFlow Pro</span>
+            </div>
+            <div class="breadcrumb">
+                <a href="index.html">任务管理</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span class="active">任务执行详情</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-info">
+                <div class="points-badge">
+                    <i class="fa-solid fa-coins"></i>
+                    <span id="user-points">2,450</span>
+                </div>
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="User">
+                    <span class="level-tag">LV.5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="detail-page">
+        <div class="detail-header">
+            <div class="detail-title">
+                任务执行详情
+                <span class="task-id">#T-1002</span>
+            </div>
+            <div class="action-buttons">
+                <a class="btn btn-secondary" href="index.html">返回任务列表</a>
+                <button class="btn btn-primary"><i class="fa-regular fa-pen-to-square"></i> 调整计划</button>
+            </div>
+        </div>
+
+        <div class="detail-main">
+            <section class="card summary-card">
+                <div class="section-header">
+                    <h2 class="section-title">任务摘要</h2>
+                    <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">任务名称</span>
+                        <span class="info-value">接入钉钉扫码登录功能</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">任务负责人</span>
+                        <span class="info-value">张武（平台组组长）</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">任务优先级</span>
+                        <span class="info-value">紧急</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">任务难度</span>
+                        <span class="info-value"><span class="difficulty-badge difficulty-l2">L2</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">截止时间</span>
+                        <span class="info-value">2023-10-28</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">所属部门</span>
+                        <span class="info-value">研发部</span>
+                    </div>
+                </div>
+                <div class="task-description">
+                    本任务需要完成企业统一登录能力对接，拆分为平台、测试、安全三个小组子任务，组长负责下发子子任务并跟进执行情况。
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-header">
+                    <h2 class="section-title">任务列表</h2>
+                    <button class="btn btn-primary" onclick="openModal('addTaskModal')">
+                        <i class="fa-solid fa-plus"></i> 添加任务
+                    </button>
+                </div>
+                <div class="tree-section">
+                    <ul class="tree-list">
+                        <li class="tree-item root has-children">
+                            <div class="tree-card">
+                                <div class="tree-header">
+                                    <div class="tree-left">
+                                        <div class="tree-title"><i class="fa-solid fa-flag"></i> 统一登录能力落地</div>
+                                        <div class="tree-meta-inline">执行人：张武 · 难度：L2 · 截止：2023-10-28</div>
+                                        <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                                    </div>
+                                    <div class="tree-actions">
+                                        <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                        <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                    </div>
+                                </div>
+                                <div class="tree-subline">
+                                    <button class="tree-toggle text-toggle" aria-expanded="true">收起</button>
+                                    <span class="meta-item">执行内容：拆分任务、制定集成计划、推进各小组执行与验收</span>
+                                </div>
+                            </div>
+
+                            <ul>
+                                <li class="tree-item has-children">
+                                    <div class="tree-card">
+                                        <div class="tree-header">
+                                            <div class="tree-left">
+                                                <div class="tree-title"><i class="fa-solid fa-users"></i> 平台组</div>
+                                                <div class="tree-meta-inline">执行人：张武 · 难度：L2 · 截止：2023-10-25</div>
+                                                <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                                            </div>
+                                            <div class="tree-actions">
+                                                <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                            </div>
+                                        </div>
+                                        <div class="tree-subline">
+                                            <button class="tree-toggle text-toggle" aria-expanded="true">收起</button>
+                                            <span class="meta-item">执行内容：负责扫码登录流程设计、接口定义与系统集成</span>
+                                        </div>
+                                    </div>
+
+                                    <ul>
+                                        <li class="tree-item">
+                                            <div class="tree-card">
+                                                <div class="tree-header">
+                                                    <div class="tree-left">
+                                                        <div class="tree-title"><i class="fa-solid fa-code"></i> 前端扫码交互</div>
+                                                        <div class="tree-meta-inline">执行人：李明 · 难度：L1 · 截止：2023-10-18</div>
+                                                        <span class="status-badge status-done"><i class="fa-solid fa-circle-check"></i> 已完成</span>
+                                                    </div>
+                                                    <div class="tree-actions">
+                                                        <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                        <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-subline">
+                                                    <span class="meta-item">执行内容：扫码弹窗、登录态轮询、异常提示与 UI 规范落地</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="tree-item has-children">
+                                            <div class="tree-card">
+                                                <div class="tree-header">
+                                                    <div class="tree-left">
+                                                        <div class="tree-title"><i class="fa-solid fa-plug"></i> OAuth 回调与票据校验</div>
+                                                        <div class="tree-meta-inline">执行人：王芳 · 难度：L2 · 截止：2023-10-22</div>
+                                                        <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                                                    </div>
+                                                    <div class="tree-actions">
+                                                        <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                        <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-subline">
+                                                    <button class="tree-toggle text-toggle" aria-expanded="true">收起</button>
+                                                    <span class="meta-item">执行内容：回调接口对接、票据校验、安全参数校验</span>
+                                                </div>
+                                            </div>
+
+                                            <ul>
+                                                <li class="tree-item">
+                                                    <div class="tree-card">
+                                                        <div class="tree-header">
+                                                            <div class="tree-left">
+                                                                <div class="tree-title"><i class="fa-solid fa-sitemap"></i> 回调接口联调</div>
+                                                                <div class="tree-meta-inline">执行人：王芳 · 难度：L1 · 截止：2023-10-20</div>
+                                                                <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                                                            </div>
+                                                            <div class="tree-actions">
+                                                                <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                                <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tree-subline">
+                                                            <span class="meta-item">执行内容：联调回调参数、异常码处理、边界场景验证</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="tree-item has-children">
+                                    <div class="tree-card">
+                                        <div class="tree-header">
+                                            <div class="tree-left">
+                                                <div class="tree-title"><i class="fa-solid fa-shield-halved"></i> 安全合规组</div>
+                                                <div class="tree-meta-inline">执行人：赵六 · 难度：L3 · 截止：2023-10-24</div>
+                                                <span class="status-badge status-pending"><i class="fa-regular fa-clock"></i> 待处理</span>
+                                            </div>
+                                            <div class="tree-actions">
+                                                <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                            </div>
+                                        </div>
+                                        <div class="tree-subline">
+                                            <button class="tree-toggle text-toggle" aria-expanded="true">收起</button>
+                                            <span class="meta-item">执行内容：安全评估、日志合规检查、风险清单输出</span>
+                                        </div>
+                                    </div>
+
+                                    <ul>
+                                        <li class="tree-item">
+                                            <div class="tree-card">
+                                                <div class="tree-header">
+                                                    <div class="tree-left">
+                                                        <div class="tree-title"><i class="fa-solid fa-file-shield"></i> 安全评估材料整理</div>
+                                                        <div class="tree-meta-inline">执行人：赵六 · 难度：L3 · 截止：2023-10-21</div>
+                                                        <span class="status-badge status-blocked"><i class="fa-solid fa-triangle-exclamation"></i> 阻塞</span>
+                                                    </div>
+                                                    <div class="tree-actions">
+                                                        <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                        <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-subline">
+                                                    <span class="meta-item">执行内容：评估材料缺少第三方接口授权，等待业务负责人补充</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="tree-item has-children">
+                                    <div class="tree-card">
+                                        <div class="tree-header">
+                                            <div class="tree-left">
+                                                <div class="tree-title"><i class="fa-solid fa-vial-circle-check"></i> 测试组</div>
+                                                <div class="tree-meta-inline">执行人：孙琪 · 难度：L2 · 截止：2023-10-27</div>
+                                                <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                                            </div>
+                                            <div class="tree-actions">
+                                                <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                            </div>
+                                        </div>
+                                        <div class="tree-subline">
+                                            <button class="tree-toggle text-toggle" aria-expanded="true">收起</button>
+                                            <span class="meta-item">执行内容：输出测试用例、完成集成测试与回归验证</span>
+                                        </div>
+                                    </div>
+
+                                    <ul>
+                                        <li class="tree-item">
+                                            <div class="tree-card">
+                                                <div class="tree-header">
+                                                    <div class="tree-left">
+                                                        <div class="tree-title"><i class="fa-solid fa-bug"></i> 集成测试用例设计</div>
+                                                        <div class="tree-meta-inline">执行人：孙琪 · 难度：L1 · 截止：2023-10-23</div>
+                                                        <span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span>
+                                                    </div>
+                                                    <div class="tree-actions">
+                                                        <button class="action-btn" onclick="openModal('addSubtaskModal')">添加子任务</button>
+                                                        <button class="action-btn primary" onclick="openModal('completeRequestModal')">申请完成</button>
+                                                    </div>
+                                                </div>
+                                                <div class="tree-subline">
+                                                    <span class="meta-item">执行内容：登录链路测试用例、异常分支覆盖与数据准备</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="addSubtaskModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>添加子任务</h3>
+                <button class="close-btn" onclick="closeModal('addSubtaskModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>子任务标题</label>
+                        <input type="text" class="form-control" placeholder="请输入子任务名称">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>执行人</label>
+                            <input type="text" class="form-control" placeholder="请选择或输入执行人">
+                        </div>
+                        <div class="form-group">
+                            <label>难度</label>
+                            <select class="form-control">
+                                <option>L1</option>
+                                <option>L2</option>
+                                <option>L3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>截止时间</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>状态</label>
+                            <select class="form-control">
+                                <option>待处理</option>
+                                <option>进行中</option>
+                                <option>已完成</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>执行内容</label>
+                        <textarea class="form-control" rows="3" placeholder="描述子任务执行内容..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addSubtaskModal')">取消</button>
+                <button class="btn btn-primary" onclick="submitModal('已提交子任务')">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addTaskModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>添加任务</h3>
+                <button class="close-btn" onclick="closeModal('addTaskModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>任务标题</label>
+                        <input type="text" class="form-control" placeholder="请输入任务名称">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>执行人</label>
+                            <input type="text" class="form-control" placeholder="请选择或输入执行人">
+                        </div>
+                        <div class="form-group">
+                            <label>难度</label>
+                            <select class="form-control">
+                                <option>L1</option>
+                                <option>L2</option>
+                                <option>L3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>截止时间</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>状态</label>
+                            <select class="form-control">
+                                <option>待处理</option>
+                                <option>进行中</option>
+                                <option>已完成</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>执行内容</label>
+                        <textarea class="form-control" rows="3" placeholder="描述任务执行内容..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addTaskModal')">取消</button>
+                <button class="btn btn-primary" onclick="submitModal('已提交任务')">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="completeRequestModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>申请完成</h3>
+                <button class="close-btn" onclick="closeModal('completeRequestModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>完成说明</label>
+                        <textarea class="form-control" rows="3" placeholder="简要说明完成情况与交付物..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>自检结果</label>
+                        <select class="form-control">
+                            <option>已自测通过</option>
+                            <option>需联调验证</option>
+                            <option>待进一步确认</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('completeRequestModal')">取消</button>
+                <button class="btn btn-primary" onclick="submitModal('已提交完成申请')">提交申请</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalID) {
+            const modal = document.getElementById(modalID);
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeModal(modalID) {
+            const modal = document.getElementById(modalID);
+            if (modal) modal.style.display = 'none';
+        }
+
+        function submitModal(message) {
+            alert(message);
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.style.display = 'none';
+            });
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.style.display = 'none';
+                }
+            });
+        });
+
+        document.querySelectorAll('.tree-toggle').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const item = btn.closest('.tree-item');
+                if (!item) return;
+                item.classList.toggle('collapsed');
+                const expanded = !item.classList.contains('collapsed');
+                btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                btn.textContent = expanded ? '收起' : '展开';
+            });
+        });
+    </script>
+</body>
+</html>
