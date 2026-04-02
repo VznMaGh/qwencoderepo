@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>任务与积分管理系统</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <header class="top-nav">
         <div class="nav-left">
             <div class="logo">
-                <i class="ri-flashlight-fill"></i>
+                <i class="fa-solid fa-bolt"></i>
                 <span>TaskFlow Pro</span>
             </div>
             <div class="breadcrumb">
@@ -21,7 +21,7 @@
         <div class="nav-right">
             <div class="user-info">
                 <div class="points-badge">
-                    <i class="ri-coins-line"></i>
+                    <i class="fa-solid fa-coins"></i>
                     <span id="user-points">2,450</span>
                 </div>
                 <div class="user-avatar">
@@ -35,28 +35,28 @@
     <main class="main-content">
         <section class="stats-bar">
             <div class="stat-item">
-                <div class="stat-icon blue"><i class="ri-list-check"></i></div>
+                <div class="stat-icon blue"><i class="fa-solid fa-list-check"></i></div>
                 <div class="stat-details">
                     <span class="stat-value" id="total-tasks">12</span>
                     <span class="stat-label">总任务数</span>
                 </div>
             </div>
             <div class="stat-item">
-                <div class="stat-icon orange"><i class="ri-time-line"></i></div>
+                <div class="stat-icon orange"><i class="fa-regular fa-clock"></i></div>
                 <div class="stat-details">
                     <span class="stat-value" id="pending-tasks">4</span>
                     <span class="stat-label">进行中</span>
                 </div>
             </div>
             <div class="stat-item">
-                <div class="stat-icon green"><i class="ri-checkbox-circle-line"></i></div>
+                <div class="stat-icon green"><i class="fa-regular fa-circle-check"></i></div>
                 <div class="stat-details">
                     <span class="stat-value" id="completed-tasks">8</span>
                     <span class="stat-label">已完成</span>
                 </div>
             </div>
             <div class="stat-item highlight">
-                <div class="stat-icon purple"><i class="ri-gift-line"></i></div>
+                <div class="stat-icon purple"><i class="fa-solid fa-gift"></i></div>
                 <div class="stat-details">
                     <span class="stat-value" id="total-points-earned">+3,200</span>
                     <span class="stat-label">累计获得积分</span>
@@ -69,11 +69,11 @@
                 <h2 class="section-title">任务列表</h2>
                 <div class="action-buttons">
                     <div class="search-box">
-                        <i class="ri-search-line"></i>
+                        <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" placeholder="搜索任务名称或负责人...">
                     </div>
                     <button class="btn btn-primary" onclick="toggleModal('createTaskModal')">
-                        <i class="ri-add-line"></i> 发布新任务
+                        <i class="fa-solid fa-plus"></i> 发布新任务
                     </button>
                 </div>
             </div>
@@ -93,54 +93,54 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span class="status-badge status-done"><i class="ri-checkbox-circle-fill"></i> 已完成</span></td>
+                            <td><span class="status-badge status-done"><i class="fa-solid fa-circle-check"></i> 已完成</span></td>
                             <td><div class="task-name"><span class="task-id">#T-1001</span> 完成首页 UI 重构设计</div></td>
-                            <td><span class="priority-badge high"><i class="ri-error-warning-fill"></i> 高</span></td>
+                            <td><span class="priority-badge high"><i class="fa-solid fa-triangle-exclamation"></i> 高</span></td>
                             <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Li+Ming&background=random" alt=""><span>李明</span></div></td>
                             <td class="date-cell">2023-10-25</td>
                             <td><span class="points-value">+150</span></td>
                             <td>
-                                <button class="btn-icon" title="查看详情"><i class="ri-eye-line"></i></button>
-                                <button class="btn-icon" title="编辑"><i class="ri-edit-line"></i></button>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="status-badge status-progress"><i class="ri-loader-4-line"></i> 进行中</span></td>
+                            <td><span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span></td>
                             <td><div class="task-name"><span class="task-id">#T-1002</span> 接入钉钉扫码登录功能</div></td>
-                            <td><span class="priority-badge urgent"><i class="ri-alarm-warning-fill"></i> 紧急</span></td>
+                            <td><span class="priority-badge urgent"><i class="fa-solid fa-bell"></i> 紧急</span></td>
                             <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Zhang+Wu&background=random" alt=""><span>张武</span></div></td>
                             <td class="date-cell">2023-10-28</td>
                             <td><span class="points-value">+200</span></td>
                             <td>
-                                <button class="btn-icon" title="查看详情"><i class="ri-eye-line"></i></button>
-                                <button class="btn-icon" title="编辑"><i class="ri-edit-line"></i></button>
-                                <button class="btn-icon success" title="完成任务"><i class="ri-check-double-line"></i></button>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn-icon success" title="完成任务"><i class="fa-solid fa-check-double"></i></button>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="status-badge status-pending"><i class="ri-time-line"></i> 待处理</span></td>
+                            <td><span class="status-badge status-pending"><i class="fa-regular fa-clock"></i> 待处理</span></td>
                             <td><div class="task-name"><span class="task-id">#T-1003</span> 优化数据库查询性能</div></td>
-                            <td><span class="priority-badge medium"><i class="ri-equalizer-line"></i> 中</span></td>
+                            <td><span class="priority-badge medium"><i class="fa-solid fa-sliders"></i> 中</span></td>
                             <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Wang+Fang&background=random" alt=""><span>王芳</span></div></td>
                             <td class="date-cell">2023-11-01</td>
                             <td><span class="points-value">+120</span></td>
                             <td>
-                                <button class="btn-icon" title="查看详情"><i class="ri-eye-line"></i></button>
-                                <button class="btn-icon" title="编辑"><i class="ri-edit-line"></i></button>
-                                <button class="btn-icon success" title="完成任务"><i class="ri-check-double-line"></i></button>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn-icon success" title="完成任务"><i class="fa-solid fa-check-double"></i></button>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="status-badge status-pending"><i class="ri-time-line"></i> 待处理</span></td>
+                            <td><span class="status-badge status-pending"><i class="fa-regular fa-clock"></i> 待处理</span></td>
                             <td><div class="task-name"><span class="task-id">#T-1004</span> 编写 API 接口文档</div></td>
-                            <td><span class="priority-badge low"><i class="ri-arrow-down-line"></i> 低</span></td>
+                            <td><span class="priority-badge low"><i class="fa-solid fa-arrow-down"></i> 低</span></td>
                             <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Zhao+Liu&background=random" alt=""><span>赵六</span></div></td>
                             <td class="date-cell">2023-11-05</td>
                             <td><span class="points-value">+80</span></td>
                             <td>
-                                <button class="btn-icon" title="查看详情"><i class="ri-eye-line"></i></button>
-                                <button class="btn-icon" title="编辑"><i class="ri-edit-line"></i></button>
-                                <button class="btn-icon success" title="完成任务"><i class="ri-check-double-line"></i></button>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn-icon success" title="完成任务"><i class="fa-solid fa-check-double"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -150,11 +150,11 @@
             <div class="pagination">
                 <span class="page-info">显示 1 到 4 条，共 12 条</span>
                 <div class="page-buttons">
-                    <button class="page-btn disabled"><i class="ri-arrow-left-s-line"></i></button>
+                    <button class="page-btn disabled"><i class="fa-solid fa-chevron-left"></i></button>
                     <button class="page-btn active">1</button>
                     <button class="page-btn">2</button>
                     <button class="page-btn">3</button>
-                    <button class="page-btn"><i class="ri-arrow-right-s-line"></i></button>
+                    <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
             </div>
         </section>
@@ -162,7 +162,7 @@
         <aside class="sidebar">
             <div class="card ranking-card">
                 <div class="card-header">
-                    <h3><i class="ri-trophy-line"></i> 积分英雄榜</h3>
+                    <h3><i class="fa-solid fa-trophy"></i> 积分英雄榜</h3>
                     <a href="#" class="view-all">查看全部</a>
                 </div>
                 <div class="ranking-list">
@@ -201,19 +201,19 @@
 
             <div class="card rules-card">
                 <div class="card-header">
-                    <h3><i class="ri-book-open-line"></i> 积分速览</h3>
+                    <h3><i class="fa-regular fa-book-open"></i> 积分速览</h3>
                 </div>
                 <ul class="rules-list">
                     <li>
-                        <span class="rule-icon"><i class="ri-task-line"></i></span>
+                        <span class="rule-icon"><i class="fa-regular fa-clipboard"></i></span>
                         <div class="rule-desc"><span>完成普通任务</span><span class="rule-points">+50~100</span></div>
                     </li>
                     <li>
-                        <span class="rule-icon"><i class="ri-fire-line"></i></span>
+                        <span class="rule-icon"><i class="fa-solid fa-fire"></i></span>
                         <div class="rule-desc"><span>完成紧急任务</span><span class="rule-points">+200+</span></div>
                     </li>
                     <li>
-                        <span class="rule-icon"><i class="ri-medal-line"></i></span>
+                        <span class="rule-icon"><i class="fa-solid fa-medal"></i></span>
                         <div class="rule-desc"><span>月度排名前三</span><span class="rule-points">+500</span></div>
                     </li>
                 </ul>
@@ -225,7 +225,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h3>发布新任务</h3>
-                <button class="close-btn" onclick="toggleModal('createTaskModal')"><i class="ri-close-line"></i></button>
+                <button class="close-btn" onclick="toggleModal('createTaskModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
                 <form>
