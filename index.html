@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务与积分管理系统</title>
+    <link rel="stylesheet" href="fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <i class="fa-solid fa-bolt"></i>
+                <span>TaskFlow Pro</span>
+            </div>
+            <div class="breadcrumb">
+                <span class="active">任务管理</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="user-info">
+                <div class="points-badge">
+                    <i class="fa-solid fa-coins"></i>
+                    <span id="user-points">2,450</span>
+                </div>
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="User">
+                    <span class="level-tag">LV.5</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-icon blue"><i class="fa-solid fa-list-check"></i></div>
+                <div class="stat-details">
+                    <span class="stat-value" id="total-tasks">12</span>
+                    <span class="stat-label">总任务数</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon orange"><i class="fa-regular fa-clock"></i></div>
+                <div class="stat-details">
+                    <span class="stat-value" id="pending-tasks">4</span>
+                    <span class="stat-label">进行中</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon green"><i class="fa-regular fa-circle-check"></i></div>
+                <div class="stat-details">
+                    <span class="stat-value" id="completed-tasks">8</span>
+                    <span class="stat-label">已完成</span>
+                </div>
+            </div>
+            <div class="stat-item highlight">
+                <div class="stat-icon purple"><i class="fa-solid fa-gift"></i></div>
+                <div class="stat-details">
+                    <span class="stat-value" id="total-points-earned">+3,200</span>
+                    <span class="stat-label">累计获得积分</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="section-header">
+                <h2 class="section-title">任务列表</h2>
+                <div class="action-buttons">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="搜索任务名称或负责人...">
+                    </div>
+                    <button class="btn btn-primary" onclick="toggleModal('createTaskModal')">
+                        <i class="fa-solid fa-plus"></i> 发布新任务
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th width="5%">状态</th>
+                            <th width="25%">任务名称</th>
+                            <th width="15%">优先级</th>
+                            <th width="15%">负责人</th>
+                            <th width="15%">截止日期</th>
+                            <th width="10%">积分奖励</th>
+                            <th width="15%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge status-done"><i class="fa-solid fa-circle-check"></i> 已完成</span></td>
+                            <td><div class="task-name"><span class="task-id">#T-1001</span> 完成首页 UI 重构设计</div></td>
+                            <td><span class="priority-badge high"><i class="fa-solid fa-triangle-exclamation"></i> 高</span></td>
+                            <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Li+Ming&background=random" alt=""><span>李明</span></div></td>
+                            <td class="date-cell">2023-10-25</td>
+                            <td><span class="points-value">+150</span></td>
+                            <td>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-progress"><i class="fa-solid fa-spinner"></i> 进行中</span></td>
+                            <td><div class="task-name"><span class="task-id">#T-1002</span> 接入钉钉扫码登录功能</div></td>
+                            <td><span class="priority-badge urgent"><i class="fa-solid fa-bell"></i> 紧急</span></td>
+                            <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Zhang+Wu&background=random" alt=""><span>张武</span></div></td>
+                            <td class="date-cell">2023-10-28</td>
+                            <td><span class="points-value">+200</span></td>
+                            <td>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn-icon success" title="完成任务"><i class="fa-solid fa-check-double"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-pending"><i class="fa-regular fa-clock"></i> 待处理</span></td>
+                            <td><div class="task-name"><span class="task-id">#T-1003</span> 优化数据库查询性能</div></td>
+                            <td><span class="priority-badge medium"><i class="fa-solid fa-sliders"></i> 中</span></td>
+                            <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Wang+Fang&background=random" alt=""><span>王芳</span></div></td>
+                            <td class="date-cell">2023-11-01</td>
+                            <td><span class="points-value">+120</span></td>
+                            <td>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn-icon success" title="完成任务"><i class="fa-solid fa-check-double"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-pending"><i class="fa-regular fa-clock"></i> 待处理</span></td>
+                            <td><div class="task-name"><span class="task-id">#T-1004</span> 编写 API 接口文档</div></td>
+                            <td><span class="priority-badge low"><i class="fa-solid fa-arrow-down"></i> 低</span></td>
+                            <td><div class="assignee"><img src="https://ui-avatars.com/api/?name=Zhao+Liu&background=random" alt=""><span>赵六</span></div></td>
+                            <td class="date-cell">2023-11-05</td>
+                            <td><span class="points-value">+80</span></td>
+                            <td>
+                                <button class="btn-icon" title="查看详情"><i class="fa-regular fa-eye"></i></button>
+                                <button class="btn-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button class="btn-icon success" title="完成任务"><i class="fa-solid fa-check-double"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination">
+                <span class="page-info">显示 1 到 4 条，共 12 条</span>
+                <div class="page-buttons">
+                    <button class="page-btn disabled"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <aside class="sidebar">
+            <div class="card ranking-card">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-trophy"></i> 积分英雄榜</h3>
+                    <a href="#" class="view-all">查看全部</a>
+                </div>
+                <div class="ranking-list">
+                    <div class="rank-item rank-1">
+                        <div class="rank-num">1</div>
+                        <img src="https://ui-avatars.com/api/?name=Chen+X&background=ffd700&color=fff" alt="" class="avatar">
+                        <div class="rank-info"><span class="name">陈大侠</span><span class="dept">研发部</span></div>
+                        <span class="score">5,280</span>
+                    </div>
+                    <div class="rank-item rank-2">
+                        <div class="rank-num">2</div>
+                        <img src="https://ui-avatars.com/api/?name=Yang+Y&background=c0c0c0&color=fff" alt="" class="avatar">
+                        <div class="rank-info"><span class="name">杨无敌</span><span class="dept">产品部</span></div>
+                        <span class="score">4,950</span>
+                    </div>
+                    <div class="rank-item rank-3">
+                        <div class="rank-num">3</div>
+                        <img src="https://ui-avatars.com/api/?name=Liu+S&background=cd7f32&color=fff" alt="" class="avatar">
+                        <div class="rank-info"><span class="name">刘超人</span><span class="dept">测试部</span></div>
+                        <span class="score">4,120</span>
+                    </div>
+                    <div class="rank-item">
+                        <div class="rank-num">4</div>
+                        <img src="https://ui-avatars.com/api/?name=Huang+R&background=random" alt="" class="avatar">
+                        <div class="rank-info"><span class="name">黄飞鸿</span><span class="dept">研发部</span></div>
+                        <span class="score">3,800</span>
+                    </div>
+                    <div class="rank-item">
+                        <div class="rank-num">5</div>
+                        <img src="https://ui-avatars.com/api/?name=Zhou+J&background=random" alt="" class="avatar">
+                        <div class="rank-info"><span class="name">周星星</span><span class="dept">设计部</span></div>
+                        <span class="score">3,450</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rules-card">
+                <div class="card-header">
+                    <h3><i class="fa-regular fa-book-open"></i> 积分速览</h3>
+                </div>
+                <ul class="rules-list">
+                    <li>
+                        <span class="rule-icon"><i class="fa-regular fa-clipboard"></i></span>
+                        <div class="rule-desc"><span>完成普通任务</span><span class="rule-points">+50~100</span></div>
+                    </li>
+                    <li>
+                        <span class="rule-icon"><i class="fa-solid fa-fire"></i></span>
+                        <div class="rule-desc"><span>完成紧急任务</span><span class="rule-points">+200+</span></div>
+                    </li>
+                    <li>
+                        <span class="rule-icon"><i class="fa-solid fa-medal"></i></span>
+                        <div class="rule-desc"><span>月度排名前三</span><span class="rule-points">+500</span></div>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <div class="modal-overlay" id="createTaskModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>发布新任务</h3>
+                <button class="close-btn" onclick="toggleModal('createTaskModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>任务标题</label>
+                        <input type="text" class="form-control" placeholder="请输入任务简短描述">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>优先级</label>
+                            <select class="form-control">
+                                <option>普通</option>
+                                <option>紧急</option>
+                                <option>非常紧急</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>截止日期</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>指派给</label>
+                        <select class="form-control">
+                            <option>李明</option>
+                            <option>张武</option>
+                            <option>王芳</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>积分奖励</label>
+                        <input type="number" class="form-control" placeholder="设定完成任务可获得的积分">
+                        <small class="help-text">建议根据任务难度设定 50-500 分</small>
+                    </div>
+                    <div class="form-group">
+                        <label>详细描述</label>
+                        <textarea class="form-control" rows="4" placeholder="任务的具体要求和验收标准..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="toggleModal('createTaskModal')">取消</button>
+                <button class="btn btn-primary">确认发布</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal(modalID){
+            const modal = document.getElementById(modalID);
+            if (modal.style.display === 'none' || modal.style.display === '') {
+                modal.style.display = 'flex';
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
